@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Task, TaskStatus } from './tasks.model';
+import { IReturnAllBody, IReturnBody, Task, TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class TasksService {
       tasks: this.tasksData,
     };
   }
-  createTask(title: string, description: string) {
+  createTask(title: string, description: string): IReturnAllBody {
     const task: Task = {
       id: uuid(),
       title,
@@ -24,6 +24,22 @@ export class TasksService {
       error: false,
       message: 'your task is assigned',
       tasks: this.tasksData,
+    };
+  }
+  getTaskById(id: string): IReturnBody {
+    const task = this.tasksData.find((task) => task.id === id);
+    return {
+      error: false,
+      message: 'your task is fetched successfully',
+      task,
+    };
+  }
+  deleteTaskById(id: string): IReturnAllBody {
+    const tasks = this.tasksData.filter((task) => task.id !== id);
+    return {
+      error: false,
+      message: 'your task is deleted successfully',
+      tasks,
     };
   }
 }

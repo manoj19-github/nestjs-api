@@ -12,7 +12,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { filter } from 'rxjs';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { GetUserDto } from 'src/user/user.dto';
+import { User } from 'src/user/user.entity ';
+
 import { GetTasksFilterDto } from './dto/get-task-filter.dto';
 import { CreateTaskDto } from './dto/tasks.dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-pipes-validation';
@@ -20,7 +23,7 @@ import { IReturnBody, IReturnAllBody, Task, TaskStatus } from './tasks.model';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class TasksController {
   constructor(private tasksService: TasksService) {}
   @Get()
@@ -33,9 +36,13 @@ export class TasksController {
   }
   @Post()
   @UsePipes(ValidationPipe)
-  createTask(@Body() createTaskDto: CreateTaskDto): IReturnAllBody {
+  createTask(
+    @Body() createTaskDto: CreateTaskDto,
+    @GetUser() user: User,
+  ): IReturnAllBody {
     const { title, description } = createTaskDto;
-    return this.tasksService.createTask(title, description);
+    console.log('user data : ', user);
+    return this.tasksService.createTask(title, description, user);
   }
   @Get(':id')
   getTaskById(@Param('id') id: string): IReturnBody {
@@ -53,3 +60,5 @@ export class TasksController {
     return this.tasksService.updateTaskStatus(id, status);
   }
 }
+
+

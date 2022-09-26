@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { IReturnAllBody, IReturnBody, Task, TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
 import { GetTasksFilterDto } from './dto/get-task-filter.dto';
+import { User } from 'src/user/user.entity ';
 
 @Injectable()
 export class TasksService {
@@ -13,12 +14,13 @@ export class TasksService {
       tasks: this.tasksData,
     };
   }
-  createTask(title: string, description: string): IReturnAllBody {
+  createTask(title: string, description: string, user: User): IReturnAllBody {
     const task: Task = {
       id: uuid(),
       title,
       description,
       status: TaskStatus.OPEN,
+      user,
     };
     this.tasksData.push(task);
     return {

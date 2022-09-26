@@ -1,8 +1,11 @@
+import { User } from 'src/user/user.entity ';
+
 export interface Task {
   id: string;
   title: string;
   description: string;
   status: TaskStatus;
+  user?: User;
 }
 
 export enum TaskStatus {

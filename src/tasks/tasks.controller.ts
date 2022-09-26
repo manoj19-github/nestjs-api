@@ -7,9 +7,11 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { filter } from 'rxjs';
 import { GetTasksFilterDto } from './dto/get-task-filter.dto';
 import { CreateTaskDto } from './dto/tasks.dto';
@@ -18,6 +20,7 @@ import { IReturnBody, IReturnAllBody, Task, TaskStatus } from './tasks.model';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
+@UseGuards(AuthGuard())
 export class TasksController {
   constructor(private tasksService: TasksService) {}
   @Get()
